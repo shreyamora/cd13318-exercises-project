@@ -1,0 +1,95 @@
+NASA Mission Intelligence RAG - Evaluation Dataset
+===================================================
+
+This file contains the sample questions used to test the NASA RAG chat
+application end-to-end, along with the responses the system is expected to
+produce. Each question was asked through the Streamlit chat interface
+(`streamlit run chat.py`) after the embedding pipeline had processed the
+documents in the `data_text/` folder. RAGAS faithfulness and answer-relevancy
+scores were observed in the sidebar for each answer.
+
+---------------------------------------------------
+Q1. What was the objective of the Apollo 11 mission?
+---------------------------------------------------
+Expected response:
+Apollo 11 was the first crewed mission to land humans on the Moon. Its primary
+objective was to perform a crewed lunar landing and return safely to Earth,
+fulfilling the national goal of landing astronauts on the Moon before the end
+of the 1960s. Neil Armstrong and Buzz Aldrin landed the Lunar Module while
+Michael Collins remained in lunar orbit aboard the Command Module.
+Source: apollo_11 mission transcripts / flight plan.
+
+Expected quality: high faithfulness (answer grounded in retrieved Apollo 11
+context), high answer relevancy.
+
+-------------------------------------------------------------
+Q2. Who were the crew members of Apollo 11?
+-------------------------------------------------------------
+Expected response:
+The Apollo 11 crew consisted of Commander Neil A. Armstrong, Command Module
+Pilot Michael Collins, and Lunar Module Pilot Edwin "Buzz" Aldrin.
+Source: apollo_11 command module / PAO transcripts.
+
+Expected quality: high faithfulness and relevancy.
+
+-------------------------------------------------------------
+Q3. What went wrong during the Apollo 13 mission?
+-------------------------------------------------------------
+Expected response:
+During Apollo 13, an oxygen tank in the Service Module ruptured/exploded roughly
+two days into the flight, crippling the spacecraft's normal power, oxygen, and
+water supplies. The Moon landing was aborted, and the crew used the Lunar Module
+as a "lifeboat" to survive and return safely to Earth. This is the origin of the
+famous phrase "Houston, we've had a problem."
+Source: apollo_13 technical / command module transcripts.
+
+Expected quality: high faithfulness when Apollo 13 documents are retrieved.
+
+-------------------------------------------------------------
+Q4. How did the Apollo 13 crew return safely to Earth?
+-------------------------------------------------------------
+Expected response:
+After the oxygen tank failure, mission control and the crew powered down the
+Command Module to conserve resources and used the Lunar Module Aquarius for
+propulsion, oxygen, and power. They performed a free-return trajectory around the
+Moon and improvised a carbon-dioxide scrubber adapter before re-entering with the
+Command Module for a safe splashdown.
+Source: apollo_13 technical / PAO transcripts.
+
+Expected quality: high relevancy; faithfulness depends on retrieved detail.
+
+-------------------------------------------------------------
+Q5. What happened during the Challenger STS-51L mission?
+-------------------------------------------------------------
+Expected response:
+The Space Shuttle Challenger mission STS-51L ended in tragedy when the orbiter
+broke apart approximately 73 seconds after launch on January 28, 1986, resulting
+in the loss of all seven crew members. The mission audio transcripts capture the
+communications around the launch.
+Source: challenger STS-51L mission audio transcripts.
+
+Expected quality: high faithfulness when Challenger audio transcripts are
+retrieved.
+
+-------------------------------------------------------------
+Q6. (Filtering test) Using the Apollo 13 mission filter, what
+	was the flight plan focus?
+-------------------------------------------------------------
+Expected response:
+With the mission filter set to apollo_13, the retrieved context should come only
+from Apollo 13 documents. The answer should describe Apollo 13 procedures and
+mission operations without pulling in Apollo 11 or Challenger content, verifying
+that metadata filtering works correctly.
+
+Expected quality: retrieved contexts all belong to apollo_13 (filter working).
+
+-------------------------------------------------------------
+Q7. (Edge case) What is the capital of France?
+-------------------------------------------------------------
+Expected response:
+This is an out-of-scope question with no supporting NASA context. The assistant
+should indicate that the provided mission documents do not contain information to
+answer the question, rather than fabricating an answer.
+
+Expected quality: low relevancy to retrieved NASA context; validates that the
+system does not hallucinate beyond its documents.

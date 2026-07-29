@@ -43,7 +43,8 @@ def initialize_rag_system(chroma_dir: str, collection_name: str):
     """Initialize the RAG system with specified backend (cached for performance)"""
 
     try:
-       return rag_client.initialize_rag_system(chroma_dir, collection_name)
+       collection = rag_client.initialize_rag_system(chroma_dir, collection_name)
+       return collection, True, None
     except Exception as e:
         return None, False, str(e)
 
@@ -183,7 +184,7 @@ def main():
     with st.spinner("Initializing RAG system..."):
 
         collection, success, error = initialize_rag_system(
-            selected_backend["directory"], 
+            selected_backend["chroma_dir"], 
             selected_backend["collection_name"]
         )
     

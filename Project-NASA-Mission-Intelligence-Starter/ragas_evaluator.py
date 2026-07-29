@@ -17,11 +17,40 @@ def evaluate_response_quality(question: str, answer: str, contexts: List[str]) -
     """Evaluate response quality using RAGAS metrics"""
     if not RAGAS_AVAILABLE:
         return {"error": "RAGAS not available"}
-    
-    # TODO: Create evaluator LLM with model gpt-3.5-turbo
-    # TODO: Create evaluator_embeddings with model test-embedding-3-small
-    # TODO: Define an instance for each metric to evaluate
-    # TODO: Evaluate the response using the metrics
-    # TODO: Return the evaluation results
 
-    pass
+    import asyncio
+
+    try:
+        # Create evaluator LLM with model gpt-3.5-turbo
+        evaluator_llm = LangchainLLMWrapper(ChatOpenAI(model="gpt-3.5-turbo"))
+
+        # Create evaluator_embeddings with model text-embedding-3-small
+        evaluator_embeddings = LangchainEmbeddingsWrapper(
+            OpenAIEmbeddings(model="text-embedding-3-small")
+        )
+
+        # Define an instance for each metric to evaluate
+        faithfulness = Faithfulness(llm=evaluator_llm)
+        response_relevancy = ResponseRelevancy(
+            llm=evaluator_llm, embeddings=evaluator_embeddings
+        )
+
+        # Build a single-turn sample from the provided data
+        sample = SingleTurnSample(
+            user_input=question,
+            response=answer,
+            retrieved_contexts=contexts,
+        )
+
+        # Evaluate the response using the metrics (async single-turn scoring)
+        async def _score() -> Dict[str, float]:
+            results: Dict[str, float] = {}
+            results["faithfulness"] = await faithfulness.single_turn_ascore(sample)
+            results["answer_relevancy"] = await response_relevancy.single_turn_ascore(sample)
+            return results
+
+        # Return the evaluation results
+        return asyncio.run(_score())
+
+    except Exception as e:
+        return {"error": str(e)}
