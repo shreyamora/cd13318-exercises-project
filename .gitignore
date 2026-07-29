@@ -219,6 +219,12 @@ ragas_results/
 .vscode/
 *.code-workspace
 
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.slnx
+
 # PyCharm
 .idea/
 *.iml
